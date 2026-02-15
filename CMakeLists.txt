@@ -18,6 +18,8 @@ set(SOURCE_FILES
     src/nodes.cpp
     src/package.cpp
     src/storage_types.cpp
+    src/reports.cpp
+    src/simulation.cpp
 )
 
 add_executable(MyExecutable
