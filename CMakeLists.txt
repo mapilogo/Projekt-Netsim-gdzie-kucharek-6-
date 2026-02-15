@@ -7,6 +7,8 @@ endif()
 project(ProjektNetsim VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 enable_testing()
 
@@ -83,3 +85,14 @@ set_target_properties(Nodes-test PROPERTIES WIN32_EXECUTABLE OFF)
 target_include_directories(Nodes-test PRIVATE include)
 target_link_libraries(Nodes-test PRIVATE gtest gtest_main)
 add_test(NAME NodesTest COMMAND Nodes-test)
+
+add_executable(Factory-test
+    test/main_gtest.cpp
+    test/test_factory.cpp
+    ${SOURCE_FILES}
+)
+
+set_target_properties(Factory-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Factory-test PRIVATE include)
+target_link_libraries(Factory-test PRIVATE gtest gtest_main)
+add_test(NAME FactoryTest COMMAND Factory-test)

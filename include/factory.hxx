@@ -3,7 +3,15 @@
 
 #include "storage_types.hxx"
 #include "nodes.hxx"
-#include <bits/stdc++.h>
+#include <list>
+#include <map>
+#include <algorithm>
+#include <iterator>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <stdexcept>
+#include <memory>
 
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
 
