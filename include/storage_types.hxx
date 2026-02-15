@@ -30,6 +30,8 @@ public:
 
 class PackageQueue : public IPackageQueue {
 public:
+    PackageQueue(PackageQueueType type) : PQT(type), list_of_packages() {}
+    ~PackageQueue() override = default;
     void push(Package&& n_package) override {
         list_of_packages.emplace_back(std::move(n_package));
     }

@@ -61,3 +61,14 @@ set_target_properties(Package-test PROPERTIES WIN32_EXECUTABLE OFF)
 target_include_directories(Package-test PRIVATE include)
 target_link_libraries(Package-test PRIVATE gtest gtest_main)
 add_test(NAME PackageTest COMMAND Package-test)
+
+add_executable(Storage_types-test
+    test/main_gtest.cpp
+    test/test_storage_types.cpp
+    ${SOURCE_FILES}
+)
+
+set_target_properties(Storage_types-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Storage_types-test PRIVATE include)
+target_link_libraries(Storage_types-test PRIVATE gtest gtest_main)
+add_test(NAME StorageTypesTest COMMAND Storage_types-test)
