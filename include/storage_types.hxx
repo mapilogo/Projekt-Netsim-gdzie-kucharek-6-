@@ -2,6 +2,7 @@
 #define STORAGE_TYPES_HPP
 
 #include "package.hxx"
+#include <iostream>
 #include <list>
 
 enum class PackageQueueType {
