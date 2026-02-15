@@ -1,5 +1,20 @@
 #include <gtest/gtest.h>
 
+//-------------------------------------------------
+//Testowy test
+
+int add(int a, int b) {
+    return a + b;
+}
+
+TEST(MathTests, Addition) {
+    EXPECT_EQ(add(2, 3), 5);
+    EXPECT_EQ(add(-1, 1), 0);
+    EXPECT_EQ(add(0, 0), 0);
+}
+
+//-------------------------------------------------
+
 // TEST(FactoryTest, IsConsistentCorrect) {
 //     // R -> W -> S
 
