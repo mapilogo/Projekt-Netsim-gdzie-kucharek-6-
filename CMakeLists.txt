@@ -72,3 +72,14 @@ set_target_properties(Storage_types-test PROPERTIES WIN32_EXECUTABLE OFF)
 target_include_directories(Storage_types-test PRIVATE include)
 target_link_libraries(Storage_types-test PRIVATE gtest gtest_main)
 add_test(NAME StorageTypesTest COMMAND Storage_types-test)
+
+add_executable(Nodes-test
+    test/main_gtest.cpp
+    test/test_nodes.cpp
+    ${SOURCE_FILES}
+)
+
+set_target_properties(Nodes-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Nodes-test PRIVATE include)
+target_link_libraries(Nodes-test PRIVATE gtest gtest_main)
+add_test(NAME NodesTest COMMAND Nodes-test)

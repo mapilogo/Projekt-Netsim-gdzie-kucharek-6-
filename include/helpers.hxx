@@ -1,5 +1,5 @@
-#ifndef HELPERS_HPP
-#define HELPERS_HPP
+#ifndef HELPERS_HXX
+#define HELPERS_HXX
 
 #include <functional>
 #include <random>
@@ -13,4 +13,4 @@ extern double default_probability_generator();
 
 extern ProbabilityGenerator probability_generator;
 
-#endif // HELPERS_HPP
+#endif // HELPERS_HXX
