@@ -40,16 +40,24 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(MyExecutable-test
-    test/tests.cpp
+add_executable(Dummy-test
+    test/test_for_tests.cpp
     test/main_gtest.cpp
     ${SOURCE_FILES}
 )
 
-set_target_properties(MyExecutable-test PROPERTIES WIN32_EXECUTABLE OFF)
+set_target_properties(Dummy-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Dummy-test PRIVATE include)
+target_link_libraries(Dummy-test PRIVATE gtest gtest_main)
+add_test(NAME DummyTest COMMAND Dummy-test)
 
-target_include_directories(MyExecutable-test PRIVATE include)
+add_executable(Package-test
+    test/main_gtest.cpp
+    test/test_package.cpp
+    ${SOURCE_FILES}
+)
 
-target_link_libraries(MyExecutable-test PRIVATE gtest gtest_main)
-
-add_test(NAME MyTests COMMAND MyExecutable-test)
+set_target_properties(Package-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Package-test PRIVATE include)
+target_link_libraries(Package-test PRIVATE gtest gtest_main)
+add_test(NAME PackageTest COMMAND Package-test)
