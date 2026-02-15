@@ -98,3 +98,14 @@ set_target_properties(Factory-test PROPERTIES WIN32_EXECUTABLE OFF)
 target_include_directories(Factory-test PRIVATE include)
 target_link_libraries(Factory-test PRIVATE gtest gtest_main)
 add_test(NAME FactoryTest COMMAND Factory-test)
+
+add_executable(Simulation-test
+    test/main_gtest.cpp
+    test/test_simulation.cpp
+    ${SOURCE_FILES}
+)
+
+set_target_properties(Simulation-test PROPERTIES WIN32_EXECUTABLE OFF)
+target_include_directories(Simulation-test PRIVATE include)
+target_link_libraries(Simulation-test PRIVATE gtest gtest_main)
+add_test(NAME SimulationTest COMMAND Simulation-test)

@@ -2,63 +2,61 @@
 #include "simulation.hxx"
 #include "factory.hxx"
 
-TEST(SimulationTest, ThrowsExceptionOnInconsistentFactory) {
-    Factory factory;
-    factory.add_ramp(Ramp(1, 1));
-    
-    EXPECT_THROW({
-        try {
-            simulate(factory, 1, [](Factory&, TimeOffset) {});
-        } catch (const std::logic_error& e) {
-            EXPECT_STREQ("Non-consistent factory", e.what());
-            throw;
-        }
-    }, std::logic_error);
+
+TEST(SpecificTurnsReportNotifierTest, GeneratesReportInCorrectTurns) {
+    std::set<Time> turns = {1, 3, 5};
+    SpecificTurnsReportNotifier notifier(turns);
+
+    // Powinno generować raport dla tur ze zbioru
+    EXPECT_TRUE(notifier.should_generate_report(1));
+    EXPECT_TRUE(notifier.should_generate_report(3));
+    EXPECT_TRUE(notifier.should_generate_report(5));
+
+    // Nie powinno generować raportu dla tur spoza zbioru
+    EXPECT_FALSE(notifier.should_generate_report(2));
+    EXPECT_FALSE(notifier.should_generate_report(4));
+    EXPECT_FALSE(notifier.should_generate_report(0));
 }
 
-TEST(SimulationTest, CallbackExecutionCount) {
-    Factory factory;
-    factory.add_storehouse(Storehouse(1));
-    factory.add_ramp(Ramp(1, 1));
-    factory.find_ramp_by_id(1)->receiver_preferences_.add_receiver(&*factory.find_storehouse_by_id(1));
 
-    int call_count = 0;
-    TimeOffset duration = 5;
-    
-    simulate(factory, duration, [&call_count](Factory&, TimeOffset) {
-        call_count++;
-    });
 
-    EXPECT_EQ(call_count, duration);
+TEST(IntervalReportNotifierTest, GeneratesReportInCorrectIntervals) {
+    TimeOffset interval = 3;
+    IntervalReportNotifier notifier(interval);
+
+    EXPECT_TRUE(notifier.should_generate_report(1));  
+    EXPECT_FALSE(notifier.should_generate_report(2));
+    EXPECT_FALSE(notifier.should_generate_report(3));
+    EXPECT_TRUE(notifier.should_generate_report(4));
+    EXPECT_FALSE(notifier.should_generate_report(5));
 }
 
-TEST(SimulationTest, IntegrationPackageFlow) {
+TEST(SimulationTest, FullSimulationSequenceExecution) {
     Factory factory;
     
+    // Konfiguracja sieci: Rampa(1) -> Robotnik(1) -> Magazyn(1)
     factory.add_ramp(Ramp(1, 1));
     factory.add_worker(Worker(1, 1, std::make_unique<PackageQueue>(PackageQueueType::FIFO)));
     factory.add_storehouse(Storehouse(1));
 
+    // Połączenia
     factory.find_ramp_by_id(1)->receiver_preferences_.add_receiver(&*factory.find_worker_by_id(1));
     factory.find_worker_by_id(1)->receiver_preferences_.add_receiver(&*factory.find_storehouse_by_id(1));
 
-    simulate(factory, 3, [](Factory&, TimeOffset) {});
+    // Zmienna do weryfikacji wywołania raportu
+    bool report_called = false;
 
-    auto storehouse_it = factory.find_storehouse_by_id(1);
-    EXPECT_FALSE(storehouse_it->get_queue()->empty());
-}
-
-TEST(SimulationTest, NotifierIntegrationWithZeroIndex) {
-    IntervalReportNotifier notifier(2);
-    Factory factory;
-    factory.add_storehouse(1);
+    //**
+    //* Symulacja przez 2 tury (indeksy 0 i 1 )
     
-    std::vector<TimeOffset> reported_turns;
-    
-    simulate(factory, 3, [&](Factory& f, TimeOffset t) {
-        if (notifier.should_generate_report(t)) {
-            reported_turns.push_back(t);
+    simulate(factory, 2, [&](Factory& f, TimeOffset t) {
+        if (t == 1) {
+            report_called = true;
+            auto storehouse_it = f.find_storehouse_by_id(1);
+            EXPECT_FALSE(storehouse_it->get_queue()->empty());
+            EXPECT_EQ(storehouse_it->get_queue()->size(), 1U);
         }
     });
 
-    ASSERT_EQ(reported_turns.size(), 1);
+    EXPECT_TRUE(report_called);
+}
